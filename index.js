@@ -16,10 +16,16 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const FRONTEND_URL = process.env.FRONTEND_URL || 'https://api-frontend-ashen.vercel.app';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://api-frontend-owj6.vercel.app,https://api-frontend-ashen.vercel.app';
+const allowedOrigins = FRONTEND_URL.split(',').map(origin => origin.trim()).filter(Boolean);
 
 app.use(cors({
-  origin: FRONTEND_URL,
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    callback(new Error(`CORS origin denied: ${origin}`));
+  },
   credentials: true,
 }));
 app.use(express.json());
