@@ -16,7 +16,12 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(cors());
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://api-frontend-ashen.vercel.app';
+
+app.use(cors({
+  origin: FRONTEND_URL,
+  credentials: true,
+}));
 app.use(express.json());
 app.use('/api', performanceRoutes);
 
